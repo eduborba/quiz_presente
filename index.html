@@ -115,7 +115,7 @@
 
   <script>
     $(document).ready(function () {
-      
+
       const questions = [
 
         {
@@ -223,6 +223,12 @@
       }
 
 
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth' // Faz o scroll ser suave
+        });
+      }
 
       // Função para tocar áudio
       function playSound(soundId) {
@@ -259,6 +265,7 @@
           </div>
         `);
           button.click(function () {
+            scrollToTop(); 
             if (i === question.correct) {
               playSound("correct-sound"); // Toca o som de acerto
               currentQuestion++;
