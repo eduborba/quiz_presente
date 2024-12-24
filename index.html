@@ -71,7 +71,14 @@
 <body>
 
   <div class="container">
-    <div class="quiz-container text-center">
+    <div id="password-container" class="text-center">
+      <h2>Digite a senha para iniciar o jogo:</h2>
+      <p>A senha é uma combinação de duas datas e contem 08 digitos.</p>
+      <p>🚨Aviso: antes de iniciar, aumente o volume do celular.</p>
+      <input type="password" id="password-input" class="form-control" placeholder="Senha" />
+      <button id="submit-password" class="btn btn-primary mt-3">Iniciar Jogo</button>
+    </div>
+    <div class="quiz-container text-center hidden">
       <div id="intro">
         <h1 id="quiz-title" class="mb-4">Descubra o Tesouro Brilhante!</h1>
         <p id="intro-text" class="mb-4" style="font-size: 20px;">
@@ -115,6 +122,11 @@
 
   <script>
     $(document).ready(function () {
+
+      senha = '02031910';
+
+
+
 
       const questions = [
 
@@ -265,7 +277,7 @@
           </div>
         `);
           button.click(function () {
-            scrollToTop(); 
+            scrollToTop();
             if (i === question.correct) {
               playSound("correct-sound"); // Toca o som de acerto
               currentQuestion++;
@@ -292,9 +304,23 @@
         playSound('fogos');
       }
 
-      $("#start-button").click(function () {
-        playSound('start-sound')
-        showQuestion(currentQuestion);
+      $("#submit-password").click(function () {
+        const correctPassword = "02031910";
+        const enteredPassword = $("#password-input").val();
+
+        if (enteredPassword === correctPassword) {
+          $("#password-container").hide(); // Esconde a tela de senha
+          $(".quiz-container").removeClass("hidden"); // Mostra o quiz
+          $(".quiz-container").show(); // Mostra o quiz
+
+
+          $("#start-button").click(function () {
+            playSound('start-sound');
+            showQuestion(currentQuestion);
+          });
+        } else {
+          alert("Senha incorreta. Tente novamente.");
+        }
       });
 
       function playFireworks() {
