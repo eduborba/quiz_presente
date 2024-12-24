@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz do Tesouro Brilhante</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .quiz-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #question-text {
+      font-size: 24px;
+      ;
+    }
+
+    .answer-button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: left;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      background-color: white;
+      transition: background-color 0.2s ease;
+    }
+
+    .answer-button:hover {
+      background-color: #f1f1f1;
+    }
+
+    .answer-button span {
+      font-size: 25px;
+    }
+
+    .answer-button img {
+      width: 200px;
+      height: 200px;
+      margin-right: 15px;
+      border-radius: 50%;
+    }
+
+    .answer-button img.hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="quiz-container text-center">
+      <div id="intro">
+        <h1 id="quiz-title" class="mb-4">Descubra o Tesouro Brilhante!</h1>
+        <p id="intro-text" class="mb-4" style="font-size: 20px;">
+          "Hoje é um dia especial, e eu preparei algo incrível para você. Responda essas perguntas e descubra seu
+          tesouro!" <br>
+
+          Espero que goste da brincadeira 😍😘
+
+        </p>
+        <p style="font-size: 20px;">Responda com atenção, pois cada resposta errada você volta para o inicio</p>
+      </div>
+      <div id="question-container" class="hidden">
+        <p id="question-text"></p>
+        <div id="answers"></div>
+      </div>
+      <div id="result-container" class="hidden">
+        <h2>Parabéns!</h2>
+        <p style="font-size: 20px;">Você encontrou o seu tesouro!🎉</p>
+        <p style="font-size: 20px;">Vá até sua penteadeira e resgate seu premio!</p>
+        <p style="font-size: 20px;">Espero que goste! Te amo !! ❤️❤️❤️❤️❤️❤️❤️❤️</p>
+        <p style="font-size: 20px;">Que esse natal seja mais um de muitos outros natais que iremos passar juntos!</p>
+        <img
+          src="https://www.lojaglamourosa.com/resources/medias/shop/products/shop-mq-05328-04-dior-addict-lip-maximizer---010-holo-pink---6ml--1.jpg"
+          alt="Presente" class="img-fluid rounded">
+      </div>
+      <div id="pergunta-indisponivel" class="hidden">
+        <h2>Atençao!</h2>
+        <p>Você vai ter que esperar, larga de ansiedade mulher! o presente é só no natal.</p>
+        <img src="https://files.cercomp.ufg.br/weby/up/549/o/Aguarde!_Em_Breve!.jpg?1573772755">
+
+      </div>
+      <button id="start-button" class="btn btn-danger">Começar o Quiz</button>
+    </div>
+  </div>
+
+  <!-- Elementos de áudio -->
+  <audio id="correct-sound" src="audios/certa.mp3"></audio>
+  <audio id="wrong-sound" src="audios/errou.mp3"></audio>
+  <audio id="start-sound" src="audios/comeco.mp3"></audio>
+  <audio id="fogos" src="audios/fogos.mp3"></audio>
+
+  <script>
+    $(document).ready(function () {
+      
+      const questions = [
+
+        {
+          question: "Qual foi a primeira coisa que nos comeu quando saimos juntos?",
+          answers: [
+            { text: "Açai", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSlqRMIGkO8-KQUFWU3eDowssJ0NB3efinUQ&s" },
+            { text: "Açai Pequeno", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSlqRMIGkO8-KQUFWU3eDowssJ0NB3efinUQ&s" },
+            { text: "Açai Grande", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSlqRMIGkO8-KQUFWU3eDowssJ0NB3efinUQ&s" },
+            { text: "Açai do Maior que tiver", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8Wqr3xfnq48wb_zyifEaKwhO94h-7gaOhcw&s" },
+          ],
+          correct: 3,
+          releaseTime: "08:00"
+        },
+        {
+          question: "Quando completamos 1000 dias juntos?",
+          answers: [
+            { text: "20/04/2016", img: "" },
+            { text: "10/07/2017", img: "" },
+            { text: "11/07/2012", img: "" },
+            { text: "15/07/2017", img: "" },
+            { text: "02/09/2017", img: "" },
+            { text: "02/09/2018", img: "" }
+          ],
+          correct: 3,
+          releaseTime: "08:00"
+        },
+        {
+          question: "Quantos natais já passamos juntos desde que estamos juntos? (contando com esse ano.)",
+          answers: [
+            { text: "11", img: "" },
+            { text: "10", img: "" },
+            { text: "09", img: "" },
+            { text: "12", img: "" },
+            { text: "13", img: "" }
+          ],
+          correct: 0,
+          releaseTime: "08:00"
+        },
+        {
+          question: "Qual presente que eu te dei que você mais amou?",
+          answers: [
+            { text: "Celular", img: "https://malibushop.com.br/wp-content/uploads/2023/08/samsung_galaxy_z_flip_4_256gb_violeta_brinde_1424023683_1_fe7bf76f5448b2804ddb8896ace41457.jpg" },
+            { text: "Maquiagem", img: "https://down-br.img.susercontent.com/file/sg-11134201-23020-lz7itxepwsnv72" },
+            { text: "Video game", img: "https://m.media-amazon.com/images/I/61KfG0-kIiL._AC_UF1000,1000_QL80_.jpg" },
+            { text: "Qualquer um, presente é sempre bom", img: "" },
+
+          ],
+          correct: 3,
+          releaseTime: "08:00"
+        },
+        {
+          question: "Qual é o seu hobby favorito?",
+          answers: [
+            { text: "Ler", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQx6Kn4lHVoTy0aHz3TxbX92LnwTHJ0tmZv-A&s" },
+            { text: "Cozinhar", img: "https://www.estadao.com.br/resizer/v2/RD3ZD2DLZBBFPLNWYWACIMVYBE.jpeg?quality=80&auth=e8c3b735c9db1b8295524af652b2addfee589437d52d1eed722eb7b06849edec&width=1075&height=527&focal=3139,2028" },
+            { text: "Malhar", img: "https://conteudo.imguol.com.br/c/entretenimento/46/2018/05/07/exercicio-musculacao-esforco-treino-1525724275514_v2_450x450.jpg" },
+            { text: "Comer", img: "https://www.uninassau.edu.br/sites/mauriciodenassau.edu.br/files/fields/imagemLateral/noticias/2023/08/quando_o_ato_de_comer_se_torna_um_transtorno_de_compulsao_alimentar.jpg" },
+            { text: "Gastar", img: "https://totalorganizacao.com.br/wp-content/uploads/2019/02/como-gastar-dinheiro.jpeg" },
+
+          ],
+          correct: 4,
+          releaseTime: "08:00"
+        },
+        {
+          question: "Qual é o presente que você vai ganhar agora?",
+          answers: [
+            { text: "Gloss da Kiko", img: "https://m.media-amazon.com/images/I/71kP6Mc1l1L._AC_UF1000,1000_QL80_.jpg" },
+            { text: "Perfume importado", img: "https://www.chanel.com/images//t_one//w_0.51,h_0.51,c_crop/q_auto:good,f_autoplus,fl_lossy,dpr_1.1/w_1240/coco-eau-de-parfum-spray-3-4fl-oz--packshot-default-113530-9539148840990.jpg" },
+            { text: "Perfume da Boticario", img: "https://m.media-amazon.com/images/I/61fBhiMBsKL.jpg" },
+            { text: "Paleta da nina Secrets", img: "https://res.cloudinary.com/beleza-na-web/image/upload/w_1500,f_auto,fl_progressive,q_auto:eco,w_1800,c_limit/e_trim/v1/imagens/products/E47347/EUDORA_NIINA_SECRETS_PALETA_TOP_SECRETS_47347_FRONTAL_1.jpg" },
+            { text: "Gloss da Dior", img: "https://epocacosmeticos.vteximg.com.br/arquivos/ids/719711/gloss-labial-dior-addict-lip-maximizer--7--jpg.jpg?v=638701426280430000" },
+            { text: "Chocolate", img: "https://m.media-amazon.com/images/I/71zfMu0Qv4L._AC_UF894,1000_QL80_.jpg" },
+            { text: "Trio de sombras da Oceane", img: "https://m.media-amazon.com/images/I/51HHbPE3M9L._AC_UF1000,1000_QL80_.jpg" },
+            { text: "Paleta de sombras Dior Backstage", img: "https://www.sephora.com.br/dw/image/v2/BFJC_PRD/on/demandware.static/-/Sites-masterCatalog_Sephora/pt_BR/dwa81276c5/images/Color%20BR/DIOR/2024/Ajustes/paleta_iluminador/001/1.%203348901720328.jpg?sw=556&sh=680&sm=fit" },
+            { text: "Gloss da Petrizi", img: "https://cdn.dooca.store/152106/products/canela_640x640+fill_ffffff.png?v=1721166353&webp=0" },
+
+          ],
+          correct: 4,
+          releaseTime: "13:59"
+        },
+        {
+          question: "Qual cor voce acha que eu escolhi ?",
+          answers: [
+            { text: "", img: "https://www.lojaglamourosa.com/resources/medias/shop/products/shop-mq-05328-04-dior-addict-lip-maximizer---010-holo-pink---6ml--1.jpg" },
+            { text: "", img: "https://www.ozcosmetics.com.br/syimages/202304/286452.jpg" },
+            { text: "", img: "https://m.media-amazon.com/images/I/51ahVxGQKxL._AC_UF1000,1000_QL80_.jpg" },
+            { text: "", img: "https://www.sephora.com.br/dw/image/v2/BFJC_PRD/on/demandware.static/-/Sites-masterCatalog_Sephora/pt_BR/dw8592a6d7/images/Color%20BR/DIOR/2024/Ajustes/gloss_labial_dior/001/1.%203348901491150.jpg?sw=556&sh=680&sm=fit" },
+
+
+          ],
+          correct: 0,
+          releaseTime: "13:59"
+        },
+
+      ];
+
+      let currentQuestion = 0;
+
+      function isQuestionReleased(questionIndex) {
+        const now = new Date();
+        const [hours, minutes] = questions[questionIndex].releaseTime.split(":").map(Number);
+        const releaseDate = new Date();
+        releaseDate.setHours(hours, minutes, 0, 0);
+        return now >= releaseDate;
+      }
+
+
+
+      // Função para tocar áudio
+      function playSound(soundId) {
+        const sound = document.getElementById(soundId);
+        sound.currentTime = 0; // Reinicia o áudio
+        sound.play();
+      }
+
+      function showQuestion(index) {
+        if (!isQuestionReleased(index)) {
+          alert(`A próxima pergunta estará disponível às ${questions[index].releaseTime}.`);
+          $('#pergunta-indisponivel').show(100);
+          $("#question-container").addClass("hidden");
+          $("#intro").addClass("hidden");
+
+          //location.reload();
+          return;
+        }
+
+        $("#start-button").hide();
+        $("#intro-text").hide();
+        $("#result-container").hide();
+        $("#question-container").removeClass("hidden");
+
+        const question = questions[index];
+        $("#question-text").text(question.question);
+        $("#answers").empty();
+
+        question.answers.forEach((answer, i) => {
+          const button = $(`
+          <div class="answer-button">
+            ${answer.img ? `<img src="${answer.img}" alt="${answer.text}">` : ''}
+            <span>${answer.text}</span>
+          </div>
+        `);
+          button.click(function () {
+            if (i === question.correct) {
+              playSound("correct-sound"); // Toca o som de acerto
+              currentQuestion++;
+              if (currentQuestion < questions.length) {
+                showQuestion(currentQuestion);
+              } else {
+                showResult();
+              }
+            } else {
+              playSound("wrong-sound"); // Toca o som de erro
+              alert("Resposta errada. Tente novamente!");
+              location.reload()
+            }
+          });
+          $("#answers").append(button);
+        });
+      }
+      function showResult() {
+        $("#question-container").addClass("hidden");
+        $("#intro").addClass("hidden");
+        $("#result-container").removeClass("hidden");
+        $("#result-container").show(100);
+        playFireworks();
+        playSound('fogos');
+      }
+
+      $("#start-button").click(function () {
+        playSound('start-sound')
+        showQuestion(currentQuestion);
+      });
+
+      function playFireworks() {
+        // Configuração básica para os fogos de artifício
+        const duration = 5 * 1000; // Duração dos fogos (3 segundos)
+        const animationEnd = Date.now() + duration;
+
+        const colors = ['#ff0000', '#ffbb00', '#00ff00', '#00bbff', '#bb00ff'];
+
+        (function frame() {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return;
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+          confetti({
+            particleCount,
+            startVelocity: 30,
+            spread: 360,
+            colors,
+            origin: {
+              x: Math.random(),
+              y: Math.random() - 0.2 // Fica levemente acima do centro
+            }
+          });
+
+          requestAnimationFrame(frame);
+        })();
+
+        var defaults = {
+          spread: 360,
+          ticks: 50,
+          gravity: 0,
+          decay: 0.94,
+          startVelocity: 30,
+          colors: ['FFE400', 'FFBD00', 'E89400', 'FFCA6C', 'FDFFB8']
+        };
+
+        function shoot() {
+          confetti({
+            ...defaults,
+            particleCount: 40,
+            scalar: 1.2,
+            shapes: ['star']
+          });
+
+          confetti({
+            ...defaults,
+            particleCount: 10,
+            scalar: 0.75,
+            shapes: ['circle']
+          });
+        }
+
+        setTimeout(shoot, 0);
+        setTimeout(shoot, 100);
+        setTimeout(shoot, 200);
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
